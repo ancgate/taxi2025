@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="nytaxitrip2025" database="LogicalDesign" id="LogicalDesign-162d" >
+	<schema name="nytaxitrip2025" >
+		<table name="dim_calendar" prior="Entity" >
+			<column name="date_id" type="BIGINT" jt="-5" mandatory="y" />
+			<column name="year_number" type="INT" jt="4" />
+			<column name="quarter_number" type="INT" jt="4" />
+			<column name="month_number" type="INT" jt="4" />
+			<column name="day_number" type="INT" jt="4" />
+			<column name="hour_number" type="INT" jt="4" />
+			<column name="week_of_month" type="INT" jt="4" />
+			<column name="week_of_year" type="INT" jt="4" />
+			<column name="holiday" type="BOOLEAN" jt="-7" />
+			<column name="weekend" type="BOOLEAN" jt="-7" />
+			<column name="month_name" type="VARCHAR" length="25" jt="12" />
+			<column name="day_name" type="VARCHAR" length="25" jt="12" />
+			<index name="pk_dim_calendar" unique="PRIMARY_KEY" >
+				<column name="date_id" />
+			</index>
+		</table>
+		<table name="dim_license" prior="Entity" >
+			<column name="dim_license_id" type="INT" jt="4" mandatory="y" />
+			<index name="pk_dim_license" unique="PRIMARY_KEY" >
+				<column name="dim_license_id" />
+			</index>
+		</table>
+		<table name="dim_location" prior="Entity" >
+			<column name="location_id" type="INT" jt="4" mandatory="y" />
+			<column name="borough" type="VARCHAR" length="100" jt="12" />
+			<column name="zone" type="VARCHAR" length="100" jt="12" />
+			<column name="service_zone" type="VARCHAR" length="100" jt="12" />
+			<column name="longitude" type="DOUBLE" jt="8" />
+			<column name="latitude" type="DOUBLE" jt="8" />
+			<index name="pk_dim_location" unique="PRIMARY_KEY" >
+				<column name="location_id" />
+			</index>
+		</table>
+		<table name="dim_payment_type" prior="payment_type" >
+			<column name="payment_type_id" type="INT" jt="4" mandatory="y" />
+			<column name="payment_type_name" type="VARCHAR" length="100" jt="12" />
+			<index name="pk_payment_type" unique="PRIMARY_KEY" >
+				<column name="payment_type_id" />
+			</index>
+		</table>
+		<table name="dim_rate_code" prior="rate_code" >
+			<column name="rate_code_id" type="INT" jt="4" mandatory="y" />
+			<column name="rate_code_name" type="VARCHAR" length="100" jt="12" />
+			<index name="pk_rate_code" unique="PRIMARY_KEY" >
+				<column name="rate_code_id" />
+			</index>
+		</table>
+		<table name="dim_taxi_type" prior="dim_taxi_" >
+			<column name="taxi_type_id" type="INT" jt="4" mandatory="y" />
+			<column name="taxi_color" type="VARCHAR" length="20" jt="12" />
+			<index name="pk_dim_taxi_type" unique="PRIMARY_KEY" >
+				<column name="taxi_type_id" />
+			</index>
+		</table>
+		<table name="dim_trip_type" prior="trip" >
+			<column name="trip_type_id" type="INT" jt="4" mandatory="y" />
+			<column name="trip_type_name" type="VARCHAR" length="50" jt="12" />
+			<index name="pk_dim_trip_type" unique="PRIMARY_KEY" >
+				<column name="trip_type_id" />
+			</index>
+		</table>
+		<table name="dim_vendor" prior="dim_" >
+			<column name="vendor_id" type="INT" jt="4" mandatory="y" />
+			<column name="vendor_name" type="VARCHAR" length="100" jt="12" />
+			<index name="pk_dim_vendor" unique="PRIMARY_KEY" >
+				<column name="vendor_id" />
+			</index>
+		</table>
+		<table name="fact_trips" prior="fact_" >
+			<column name="fact_id" type="BIGINT" jt="-5" mandatory="y" >
+				<identity><![CDATA[AUTO_INCREMENT]]></identity>
+			</column>
+			<column name="trip_duration" type="INT" jt="4" />
+			<column name="passenger_count" type="INT" jt="4" />
+			<column name="trip_distance" type="DOUBLE" jt="8" />
+			<column name="fare_amount" type="DOUBLE" jt="8" />
+			<column name="extra" type="DOUBLE" jt="8" />
+			<column name="mta_tax" type="DOUBLE" jt="8" />
+			<column name="improvement_surcharge" type="DOUBLE" jt="8" />
+			<column name="tip_amount" type="DOUBLE" jt="8" />
+			<column name="tolls_amount" type="DOUBLE" jt="8" />
+			<column name="total_amount" type="DOUBLE" jt="8" />
+			<column name="congestion_surcharge" type="DOUBLE" jt="8" />
+			<column name="airport_fee" type="DOUBLE" jt="8" />
+			<column name="vendor_id" type="INT" jt="4" mandatory="y" />
+			<column name="payment_type_id" type="INT" jt="4" mandatory="y" />
+			<column name="rate_code_id" type="INT" jt="4" mandatory="y" />
+			<column name="pickup_location_id" type="INT" jt="4" mandatory="y" />
+			<column name="dropoff_location_id" type="INT" jt="4" mandatory="y" />
+			<column name="pickup_date_id" type="BIGINT" jt="-5" mandatory="y" />
+			<column name="dropoff_date_id" type="BIGINT" jt="-5" mandatory="y" />
+			<column name="trip_type_id" type="INT" jt="4" mandatory="y" />
+			<column name="taxi_type_id" type="INT" jt="4" mandatory="y" />
+			<index name="pk_fact_trips" unique="PRIMARY_KEY" >
+				<column name="fact_id" />
+			</index>
+			<fk name="fk_fact_trips_dim_vendor" to_schema="nytaxitrip2025" to_table="dim_vendor" type="NonIdentifying" mandatory="y" cardinality="OneMore" range_from="0" range_to="0" >
+				<fk_column name="vendor_id" pk="vendor_id" />
+			</fk>
+			<fk name="fk_fact_trips_dim_rate_code" to_schema="nytaxitrip2025" to_table="dim_rate_code" type="NonIdentifying" mandatory="y" cardinality="OneMore" range_from="0" range_to="0" >
+				<fk_column name="rate_code_id" pk="rate_code_id" />
+			</fk>
+			<fk name="fk_fact_trips_dim_payment_type" to_schema="nytaxitrip2025" to_table="dim_payment_type" type="NonIdentifying" mandatory="y" cardinality="OneMore" range_from="0" range_to="0" >
+				<fk_column name="payment_type_id" pk="payment_type_id" />
+			</fk>
+			<fk name="fk_fact_trips_dim_location" to_schema="nytaxitrip2025" to_table="dim_location" type="NonIdentifying" mandatory="y" cardinality="OneMore" range_from="0" range_to="0" >
+				<fk_column name="pickup_location_id" pk="location_id" />
+			</fk>
+			<fk name="fk_fact_trips_dim_location_0" to_schema="nytaxitrip2025" to_table="dim_location" type="NonIdentifying" mandatory="y" cardinality="OneMore" range_from="0" range_to="0" >
+				<fk_column name="dropoff_location_id" pk="location_id" />
+			</fk>
+			<fk name="fk_fact_trips_dim_calendar" to_schema="nytaxitrip2025" to_table="dim_calendar" type="NonIdentifying" mandatory="y" cardinality="OneMore" range_from="0" range_to="0" >
+				<fk_column name="pickup_date_id" pk="date_id" />
+			</fk>
+			<fk name="fk_fact_trips_dim_calendar_0" to_schema="nytaxitrip2025" to_table="dim_calendar" type="NonIdentifying" mandatory="y" cardinality="OneMore" range_from="0" range_to="0" >
+				<fk_column name="dropoff_date_id" pk="date_id" />
+			</fk>
+			<fk name="fk_fact_trips_dim_trip_type" to_schema="nytaxitrip2025" to_table="dim_trip_type" type="NonIdentifying" mandatory="n" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="trip_type_id" pk="trip_type_id" />
+			</fk>
+			<fk name="fk_fact_trips_dim_taxi_type" to_schema="nytaxitrip2025" to_table="dim_taxi_type" type="NonIdentifying" mandatory="y" cardinality="OneMore" range_from="0" range_to="0" >
+				<fk_column name="taxi_type_id" pk="taxi_type_id" />
+			</fk>
+		</table>
+		<table name="fact_ubers" prior="Entity" >
+			<column name="fact_id" type="BIGINT" jt="-5" mandatory="y" />
+			<column name="pickup_date_id" type="BIGINT" jt="-5" />
+			<column name="dropoff_date_id" type="BIGINT" jt="-5" />
+			<column name="pickup_location_id" type="INT" jt="4" mandatory="y" />
+			<column name="dropoff_location_id" type="INT" jt="4" mandatory="y" />
+			<index name="pk_fact_ubers" unique="PRIMARY_KEY" >
+				<column name="fact_id" />
+			</index>
+			<fk name="fk_fact_ubers_dim_location" to_schema="nytaxitrip2025" to_table="dim_location" type="NonIdentifying" mandatory="y" cardinality="OneMore" range_from="0" range_to="0" >
+				<fk_column name="pickup_location_id" pk="location_id" />
+			</fk>
+			<fk name="fk_fact_ubers_dim_location_0" to_schema="nytaxitrip2025" to_table="dim_location" type="NonIdentifying" mandatory="y" cardinality="OneMore" range_from="0" range_to="0" >
+				<fk_column name="dropoff_location_id" pk="location_id" />
+			</fk>
+		</table>
+	</schema>
+	<layout name="Default Layout" id="Layout-326" show_relation="name" >
+		<entity schema="nytaxitrip2025" name="dim_calendar" color="C1D8EE" x="748" y="391" />
+		<entity schema="nytaxitrip2025" name="dim_license" color="C1D8EE" x="1207" y="85" />
+		<entity schema="nytaxitrip2025" name="dim_location" color="C1D8EE" x="765" y="221" />
+		<entity schema="nytaxitrip2025" name="dim_payment_type" color="C1D8EE" x="714" y="51" />
+		<entity schema="nytaxitrip2025" name="dim_rate_code" color="C1D8EE" x="51" y="340" />
+		<entity schema="nytaxitrip2025" name="dim_taxi_type" color="C1D8EE" x="102" y="527" />
+		<entity schema="nytaxitrip2025" name="dim_trip_type" color="C1D8EE" x="731" y="680" />
+		<entity schema="nytaxitrip2025" name="dim_vendor" color="C1D8EE" x="51" y="85" />
+		<entity schema="nytaxitrip2025" name="fact_trips" color="C1D8EE" x="374" y="136" />
+		<entity schema="nytaxitrip2025" name="fact_ubers" color="C1D8EE" x="1139" y="238" />
+	</layout>
+</project>
