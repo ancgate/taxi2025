@@ -1,4 +1,3 @@
 {% macro convert_date_to_iso(date_string) %}
-  SELECT
-    TO_DATE({{ date_string }}, 'MM/DD/YYYY') AS date_iso
+TO_CHAR(TO_DATE({{ date_string }}), 'YYYY-MM-DD')
 {% endmacro %}
